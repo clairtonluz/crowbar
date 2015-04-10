@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# removes all import java.util.* from groovy files
+
 for f in $(find . -type f -name '*.groovy'); do
   mv $f $f.tmp
   sed 's/import java.util.*//g' $f.tmp > $f
