@@ -1,4 +1,6 @@
-shell-utils
-===========
+crowbar
+=======
 
-scripts using sed or not, to help java --> groovy migration ATM!
+A bash shell script to help java --> groovy migration/adoption
+
+
