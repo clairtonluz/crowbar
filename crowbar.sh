@@ -8,4 +8,16 @@
 
 printf "%s\n" "crowbar"
 printf "%s\n" "======="
+printf "%s\n" "where java source code is located ?"
+printf "%s\n" "please inform the full path."
+printf "%s\n" "(for instance: /home/user/your_project/src/main/java)"
 
+read jpath
+
+if [ -z $jpath ]
+then
+  echo "no path entered." >&2
+  exit 1
+fi
+
+find $jpath -name "*.java" -print

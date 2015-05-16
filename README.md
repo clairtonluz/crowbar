@@ -1,6 +1,6 @@
 crowbar
 =======
 
-A bash shell script to help java --> groovy migration/adoption
+A bash shell script to help java --> groovy migration
 
 
