@@ -11,20 +11,18 @@
 jpath=""
 gpath=""
 
-crowbar_ui_start()
-{
-  printf "\e[33m"
-}
-
-crowbar_ui_end()
-{
-  printf "\e[0m"
-}
-
 crowbar_info()
 {
+  printf "\e[33m"
   printf "%s\n" "crowbar"
   printf "%s\n" "======="
+  printf "\n"
+  printf "\e[31m"
+  printf "%s\n" "=================================="
+  printf "%s\n" "WARNING: this will break the code."
+  printf "%s\n" "=================================="
+  printf "\n"
+  printf "\e[33m"
   printf "%s\n" "where java source code is located ?"
   printf "%s\n" "(for instance: /home/user/your_project/src/main/java/)"
 }
@@ -34,7 +32,7 @@ crowbar_path_validation()
   read jpath
   if [ -z $jpath ]
   then
-    crowbar_ui_end
+    printf "\e[0m"
     exit 1
   fi
 }
@@ -79,17 +77,36 @@ crowbar_remove_public_keyword()
   fi
 }
 
+crowbar_remove_default_imports()
+{
+  printf "%s\n" "Remove default imports ? (y/n)"
+  crowbar_answer
+  answer=$?
+  if [ $answer == 0 ]
+  then
+    for f in $(find $gpath -type f -name '*.groovy'); do
+      mv $f $f.tmp
+      sed 's/import java.io.*//g' $f.tmp > $f
+      rm -f $f.tmp
+
+      mv $f $f.tmp
+      sed 's/import java.util.*//g' $f.tmp > $f
+      rm -f $f.tmp
+    done
+  fi
+}
+
 trap ctrl_c INT
 
 ctrl_c() {
-  crowbar_ui_end
+  printf "\e[0m"
 }
 
-crowbar_ui_start
 crowbar_info
 crowbar_path_validation
 crowbar_rename_source_directory
 crowbar_change_file_extension
 crowbar_remove_public_keyword
-crowbar_ui_end
+crowbar_remove_default_imports
+printf "\e[0m"
 
