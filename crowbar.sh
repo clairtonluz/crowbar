@@ -40,11 +40,17 @@ crowbar_path_validation()
   fi
 }
 
-crowbar_setup()
+crowbar_rename_source_directory()
 {
-  mkdir $gpath #change java to groovy here.
-  # move all .java files to the new directory.
-  # change the file extension.
+  gpath="${jpath//java/groovy}"
+  mv ${jpath} ${gpath}
+}
+
+crowbar_change_file_extension()
+{
+  for f in $(find $gpath -type f -name '*.java'); do
+    mv $f $(echo "$f" | sed 's/java$/groovy/')
+  done
 }
 
 trap ctrl_c INT
@@ -56,6 +62,7 @@ ctrl_c() {
 crowbar_ui_start
 crowbar_info
 crowbar_path_validation
-crowbar_setup
+crowbar_rename_source_directory
+crowbar_change_file_extension
 crowbar_ui_end
 
