@@ -8,7 +8,18 @@
 
 # functions
 
-JPATH
+jpath=""
+gpath=""
+
+crowbar_ui_start()
+{
+  printf "\e[33m"
+}
+
+crowbar_ui_end()
+{
+  printf "\e[0m"
+}
 
 crowbar_info()
 {
@@ -21,23 +32,30 @@ crowbar_info()
 
 crowbar_path_validation()
 {
-read JPATH
-if [ -z $JPATH ]
-then
-  echo "no path entered." >&2
-  exit 1
-fi
+  read jpath
+  if [ -z $jpath ]
+  then
+    crowbar_ui_end
+    exit 1
+  fi
 }
 
 crowbar_setup()
 {
-  mkdir $JPATH #change java to groovy here.
+  mkdir $gpath #change java to groovy here.
   # move all .java files to the new directory.
   # change the file extension.
 }
 
+trap ctrl_c INT
 
+ctrl_c() {
+  crowbar_ui_end
+}
+
+crowbar_ui_start
 crowbar_info
 crowbar_path_validation
 crowbar_setup
+crowbar_ui_end
 
