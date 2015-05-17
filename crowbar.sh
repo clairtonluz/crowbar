@@ -26,8 +26,7 @@ crowbar_info()
   printf "%s\n" "crowbar"
   printf "%s\n" "======="
   printf "%s\n" "where java source code is located ?"
-  printf "%s\n" "please inform the full path."
-  printf "%s\n" "(for instance: /home/user/your_project/src/main/java)"
+  printf "%s\n" "(for instance: /home/user/your_project/src/main/java/)"
 }
 
 crowbar_path_validation()
@@ -37,6 +36,18 @@ crowbar_path_validation()
   then
     crowbar_ui_end
     exit 1
+  fi
+}
+
+crowbar_answer()
+{
+  read a
+  if [ "$a" == 'NO' ] || [ "$a" == 'no' ] || [ "$a" == 'No' ] || [ "$a" == 'N' ] || [ "$a" == 'n' ]
+  then
+    return 1
+  elif [ "$a" == 'YES' ] || [ "$a" == 'yes' ] || [ "$a" == 'Yes' ] || [ "$a" == 'Y' ] || [ "$a" == 'y' ]
+  then
+    return 0
   fi
 }
 
@@ -53,6 +64,21 @@ crowbar_change_file_extension()
   done
 }
 
+crowbar_remove_public_keyword()
+{
+  printf "%s\n" "Remove public keyword ? (y/n)"
+  crowbar_answer
+  answer=$?
+  if [ $answer == 0 ]
+  then
+    for f in $(find $gpath -type f -name '*.groovy'); do
+      mv $f $f.tmp
+      sed 's/public//g' $f.tmp > $f
+      rm -f $f.tmp
+    done
+  fi
+}
+
 trap ctrl_c INT
 
 ctrl_c() {
@@ -64,5 +90,6 @@ crowbar_info
 crowbar_path_validation
 crowbar_rename_source_directory
 crowbar_change_file_extension
+crowbar_remove_public_keyword
 crowbar_ui_end
 
