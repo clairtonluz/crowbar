@@ -2,7 +2,7 @@
 #: Title       : crowbar
 #: Date        : 2015-04-09
 #: Author      : "Helio Frota" <00hf11 at gmail dot com>
-#: Version     : 0.1.0
+#: Version     : 0.2.0
 #: Description : A bash shell script to help java --> groovy migration
 #: Options     : None
 
@@ -96,6 +96,21 @@ crowbar_remove_default_imports()
   fi
 }
 
+crowbar_remove_dot_class()
+{
+  printf "%s\n" "Remove .class ? (y/n)"
+  crowbar_answer
+  answer=$?
+  if [ $answer == 0 ]
+  then
+    for f in $(find $gpath -type f -name '*.groovy'); do
+      mv $f $f.tmp
+      sed 's/\.class//g' $f.tmp > $f
+      rm -f $f.tmp
+    done
+  fi
+}
+
 trap ctrl_c INT
 
 ctrl_c() {
@@ -108,5 +123,6 @@ crowbar_rename_source_directory
 crowbar_change_file_extension
 crowbar_remove_public_keyword
 crowbar_remove_default_imports
+crowbar_remove_dot_class
 printf "\e[0m"
 
