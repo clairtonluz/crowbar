@@ -8,7 +8,9 @@
 
 # functions
 
-inputinfo() #@ USAGE: java source path
+JPATH
+
+crowbar_info()
 {
   printf "%s\n" "crowbar"
   printf "%s\n" "======="
@@ -17,21 +19,25 @@ inputinfo() #@ USAGE: java source path
   printf "%s\n" "(for instance: /home/user/your_project/src/main/java)"
 }
 
-# executing
-
-inputinfo
-
-# verify the input.
-read jpath
-
-if [ -z $jpath ]
+crowbar_path_validation()
+{
+read JPATH
+if [ -z $JPATH ]
 then
   echo "no path entered." >&2
   exit 1
 fi
+}
 
-# a) creates the directory src/main/groovy
-# b) move all to src/main/groovy
-# c) changes the file extension
+crowbar_setup()
+{
+  mkdir $JPATH #change java to groovy here.
+  # move all .java files to the new directory.
+  # change the file extension.
+}
 
-find f in $jpath -type f -name "*.java" -print
+
+crowbar_info
+crowbar_path_validation
+crowbar_setup
+
