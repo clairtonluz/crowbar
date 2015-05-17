@@ -111,6 +111,36 @@ crowbar_remove_dot_class()
   fi
 }
 
+crowbar_all_single_quotes()
+{
+  printf "%s\n" "All single quotes ? (y/n)"
+  crowbar_answer
+  answer=$?
+  if [ $answer == 0 ]
+  then
+    for f in $(find $gpath -type f -name '*.groovy'); do
+      mv $f $f.tmp
+      sed "s/\"/'/g" $f.tmp > $f
+      rm -f $f.tmp
+    done
+  fi
+}
+
+crowbar_remove_all_semicolon()
+{
+  printf "%s\n" "Remove all semilocons ? (y/n)"
+  crowbar_answer
+  answer=$?
+  if [ $answer == 0 ]
+  then
+    for f in $(find $gpath -type f -name '*.groovy'); do
+      mv $f $f.tmp
+      sed 's/;//g' $f.tmp > $f
+      rm -f $f.tmp
+    done
+  fi
+}
+
 trap ctrl_c INT
 
 ctrl_c() {
@@ -124,5 +154,7 @@ crowbar_change_file_extension
 crowbar_remove_public_keyword
 crowbar_remove_default_imports
 crowbar_remove_dot_class
+crowbar_all_single_quotes
+crowbar_remove_all_semicolon
 printf "\e[0m"
 
